@@ -1,3 +1,5 @@
 # makeuser
 
-A script that allows admins of tilde.team to make user accounts easily.
+A script that allows admins of thunix to make user accounts easily.
+
+Forked from tilde.team's makeuser repo.
