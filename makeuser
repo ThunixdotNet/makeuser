@@ -1,11 +1,25 @@
 #!/bin/bash
 # ---------------------------------------------------------------------------
-# makeuser - tilde.team new user creation
+# makeuser - tilde new user creation
 # Usage: makeuser [-h|--help] <username> <email> "<pubkey>"
 # ---------------------------------------------------------------------------
-
+#
+# Forked from tilde.team's make user script (
 PROGNAME=${0##*/}
-VERSION="0.1"
+VERSION="0.4"
+LIST_NAME="thunix-join@lists.tildeverse.org"
+ADMIN_EMAIL="root@thunix.net"
+EMAIL_TEMPLATE="email.tmpl"
+YAML_FILE="$1.yml"
+# This one for team
+# ZNC_USER="/home/znc/add_znc_user.sh"
+
+# This one for Thunix
+ZNC_USER="/var/lib/znc/create-znc_account.sh"
+
+# Set location to your repo for ansible here
+# It is only needed for thunix
+REPO_LOCATION="~/repos/ansible"
 
 error_exit() {
   echo -e "${PROGNAME}: ${1:-"Unknown Error"}" >&2
@@ -20,10 +34,10 @@ sub_to_list() {
   echo "
 From: $1
 Subject: subscribe
-" | sudo -u $1 sendmail tildeteam-join@lists.tildeverse.org
+" | sudo -u $1 sendmail $LIST_NAME 
 }
 
-[[ $(id -u) != 0 ]] && error_exit "you must be the superuser to run this script."
+[[ $(id -u) == 0 ]] && error_exit "Do not run this script as root."
 
 case $1 in
   -h | --help)
@@ -35,13 +49,46 @@ case $1 in
     echo "adding new user $1"
     newpw=$(pwgen -1B 10)
     pwcrypt=$(perl -e "print crypt('${newpw}', 'sa');")
-    useradd -m -g 100 -p $pwcrypt -s /bin/bash $1 || exit 1
-
-    sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/" email.tmpl | sendmail $1 $2 sudoers@tilde.team
+    sudo useradd -m -g 100 -p $pwcrypt -s /bin/bash $1 || exit 1
+    sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/" $EMAIL_TEMPLATE | sendmail $1 $2 $ADMIN_EMAIL 
     sub_to_list $1
-    sudo -u znc /home/znc/add_znc_user.sh $1
+
+#    This line is for team
+#    sudo -u znc /home/znc/add_znc_user.sh $1
+# 	This one is for Thunix
+		sudo $ZNC_USER $1 $newpw
 
     echo "$3" | tee /home/$1/.ssh/authorized_keys
-    toot "welcome new user ~$1!" ;;
+
+# If root doesn't have a fediverse account, comment this out
+    sudo toot "welcome new user ~$1!"
+
+#Thunix specific section
+		echo "---
+- name: Setting up $1
+  user:
+    name: $1
+    groups: tilde
+    state: present
+    skeleton: /etc/skel
+    shell: /bin/bash
+    system: no
+    createhome: yes
+    home: /home/$1
+- authorized_key:
+    user: $1
+    state: present
+    key:'$3'" > $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
+
+		echo -e "- include: users/$YAML_FILE\n" >> $REPO_LOCATION/roles/shell/tasks/users.yml
+		place=`pwd`
+		cd $REPO_LOCATION
+		git add $REPO_LOCATION/roles/shell/tasks/users.yml
+		git commit -am "Adding user $1"
+		git push
+		cd $place
+# End Thunix specific section
+		;;
+ 
 esac
 
