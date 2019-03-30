@@ -54,9 +54,9 @@ case $1 in
     sub_to_list $1
 
 #    This line is for team
-#    sudo -u znc /home/znc/add_znc_user.sh $1
+#    sudo -u znc $ZNC_USER $1
 # 	This one is for Thunix
-		sudo $ZNC_USER $1 $newpw
+		sudo -u znc $ZNC_USER $1 $newpw
 
     echo "$3" | tee /home/$1/.ssh/authorized_keys
 
