@@ -19,7 +19,7 @@ ZNC_USER="/var/lib/znc/create-znc_account.sh"
 
 # Set location to your repo for ansible here
 # It is only needed for thunix
-REPO_LOCATION="~/repos/ansible"
+REPO_LOCATION="/home/ubergeek/repos/ansible/"
 
 error_exit() {
   echo -e "${PROGNAME}: ${1:-"Unknown Error"}" >&2
@@ -34,7 +34,7 @@ sub_to_list() {
   echo "
 From: $1
 Subject: subscribe
-" | sudo -u $1 sendmail $LIST_NAME 
+" | sudo -u $1 mail $LIST_NAME 
 }
 
 [[ $(id -u) == 0 ]] && error_exit "Do not run this script as root."
@@ -47,21 +47,26 @@ case $1 in
   *)
     [[ $# -ne 3 ]] && error_exit "not enough args"
     echo "adding new user $1"
-    newpw=$(pwgen -1B 10)
+    newpw=`pwgen -1B 10`
     pwcrypt=$(perl -e "print crypt('${newpw}', 'sa');")
-    sudo useradd -m -g 100 -p $pwcrypt -s /bin/bash $1 || exit 1
-    sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/" $EMAIL_TEMPLATE | sendmail $1 $2 $ADMIN_EMAIL 
+    sudo useradd -m -g 1000 -p $pwcrypt -s /bin/bash $1 || exit 1
+#		This is the welcome for team.
+#    sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/" $EMAIL_TEMPLATE | sudo mail $1 $2 $ADMIN_EMAIL 
+
+#		This is the welcome email for thunix
+		sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/g" email.tmpl | sudo mail -s "Welcome to Thunix!" $2
     sub_to_list $1
 
 #    This line is for team
 #    sudo -u znc $ZNC_USER $1
 # 	This one is for Thunix
-		sudo -u znc $ZNC_USER $1 $newpw
+		sudo -u znc $ZNC_USER $1 $pwcrypt
 
-    echo "$3" | tee /home/$1/.ssh/authorized_keys
+#		We don't need this for thunix, since ansible will do it
+#		echo "$3" | tee /home/$1/.ssh/authorized_keys
 
 # If root doesn't have a fediverse account, comment this out
-    sudo toot "welcome new user ~$1!"
+#    sudo toot "welcome new user ~$1!"
 
 #Thunix specific section
 		echo "---
@@ -78,14 +83,14 @@ case $1 in
 - authorized_key:
     user: $1
     state: present
-    key:'$3'" > $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
+    key: \"$3\"" > $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
 
-		echo -e "- include: users/$YAML_FILE\n" >> $REPO_LOCATION/roles/shell/tasks/users.yml
+		echo "- include: users/$YAML_FILE" >> $REPO_LOCATION/roles/shell/tasks/users.yml
 		place=`pwd`
 		cd $REPO_LOCATION
 		git add $REPO_LOCATION/roles/shell/tasks/users.yml
 		git commit -am "Adding user $1"
-		git push
+#		git push
 		cd $place
 # End Thunix specific section
 		;;
