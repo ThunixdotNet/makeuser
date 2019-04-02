@@ -60,7 +60,7 @@ case $1 in
 #    This line is for team
 #    sudo -u znc $ZNC_USER $1
 # 	This one is for Thunix
-		sudo -u znc $ZNC_USER $1 $pwcrypt
+		sudo $ZNC_USER $1 $pwcrypt
 
 #		We don't need this for thunix, since ansible will do it
 #		echo "$3" | tee /home/$1/.ssh/authorized_keys
