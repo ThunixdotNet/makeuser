@@ -88,9 +88,9 @@ case $1 in
 		echo "- include: users/$YAML_FILE" >> $REPO_LOCATION/roles/shell/tasks/users.yml
 		place=`pwd`
 		cd $REPO_LOCATION
-		git add $REPO_LOCATION/roles/shell/tasks/users.yml
+		git add $REPO_LOCATION/roles/shell/tasks/users/$1.yml
 		git commit -am "Adding user $1"
-#		git push
+		git push
 		cd $place
 # End Thunix specific section
 		;;
