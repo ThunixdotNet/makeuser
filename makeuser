@@ -55,6 +55,7 @@ case $1 in
 
 #		This is the welcome email for thunix
 		sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/g" email.tmpl | sudo mail -s "Welcome to Thunix!" $2
+		sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/g" email.tmpl | sudo mail -s "Welcome to Thunix!" $ADMIN_EMAIL 
     sub_to_list $1
 
 #    This line is for team
@@ -69,6 +70,8 @@ case $1 in
 #    sudo toot "welcome new user ~$1!"
 
 #Thunix specific section
+		currdir=`pwd`
+		cd $REPO_LOCATION; git pull; cd $currdir
 		echo "---
 - name: Setting up $1
   user:
