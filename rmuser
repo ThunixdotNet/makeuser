@@ -1,5 +1,14 @@
 #!/bin/bash
+echo "This will remove user account $1 from Thunix."
+echo "It is assumed the user account has been un-enforced in Ansible as well."
 
-sudo pkill -U $1
+echo "Killing user processes..."
+sudo pkill -9 -U $1
+
+echo "Arching home dir..."
 sudo tar cfz /home/$1.tgz /home/$1
+
+echo "Deleting account from system..."
 sudo userdel $1
+
+sudo mail -s "User Account $1 removed from Thunix" root@thunix.net
