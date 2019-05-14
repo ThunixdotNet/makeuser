@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo pkill -U $1
+sudo tar cfz /home/$1.tgz /home/$1
+sudo userdel $1
