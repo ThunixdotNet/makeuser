@@ -1,0 +1,15 @@
+#!/bin/bash
+
+USER=$1
+PASSWORD=`pwgen -1B 24`
+ADMIN_EMAIL='root@thunix.net'
+
+sudo mysql -u root << _EOF
+CREATE DATABASE $USER;
+GRANT ALL PRIVILEGES ON $USER.* TO '$USER'@'localhost' 	IDENTIFIED BY '$PASSWORD';
+FLUSH PRIVILEGES;
+_EOF
+
+sed -e "s/_username_/$USER/g" -e "s/_password_/$PASSWORD/g" dbemail.tmpl | sudo mail -s "Your database has been provisioned" $USER@thunix.net
+sed -e "s/_username_/$USER/g" -e "s/_password_/$PASSWORD/g" dbemail.tmpl | sudo mail -s "Your database has been provisioned" $ADMIN_EMAIL
+
