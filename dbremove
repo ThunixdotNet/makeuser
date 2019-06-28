@@ -1,0 +1,14 @@
+#!/bin/bash
+ADMIN_EMAIL="root@thunix.net"
+USER=$1
+
+sudo mysqldump -u root $USER > /tmp/$USER.sql
+sudo mv /tmp/$USER.sql /root/$USER.sql
+
+sudo mysql -u root << _EOF
+DROP DATABASE $USER;
+FLUSH PRIVILEGES;
+_EOF
+
+echo "The databases for $USER has been archived, and removed." | sudo mail -s "Database for $USER has been removed" $ADMIN_EMAIL
+
