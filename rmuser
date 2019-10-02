@@ -6,7 +6,7 @@ echo "Killing user processes..."
 sudo pkill -9 -U $1
 
 echo "Archiving home dir..."
-sudo tar cfz /home/$1.tgz /home/$1
+sudo tar cfz /root/backups/$1.tgz /home/$1
 sudo rm -rf /home/$1
 
 echo "Deleting account from system..."
