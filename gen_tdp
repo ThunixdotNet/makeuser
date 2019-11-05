@@ -1,0 +1,62 @@
+#!/bin/bash
+###############################################################################
+#
+# $0              A bash script to generate the tilde.json file as described by
+#                 http://protocol.club/~datagrok/beta-wiki/tdp.html
+#
+#                 This command takes no arguments, and sends outputs to stdout.
+# Version         1.2
+#
+# Licensed under a the AGPL 3.0 or later, by Ubergeek (ubergeek@thunix.net)
+# https://www.gnu.org/licenses/gpl-3.0.en.html
+#
+###############################################################################
+
+CONFIG=./setenv.sh
+
+if [ ! -f "$CONFIG" ]; then
+	echo "Config file does not exist, or not at the location specified.  Please create the file, or correct the location."
+	exit 1
+fi
+
+. $CONFIG
+
+cat << _EOF
+{
+	"name" : "$SITE_TITLE",
+	"url" : "$SITE",
+	"want_users":$WANT_USERS,
+	"admin_email": "$ADMIN_EMAIL", 
+	"signup_url": "$SIGNUP_URL",
+	"description": "$DESCRIPTION",
+_EOF
+
+echo -ne "\t\"user_count\":"
+echo $(for i in $(members tilde); do echo $i; done | sort | uniq | wc -l)","
+echo -e "\t\"generated_at\" : \"$(date)\","
+echo -e "\t\"uptime\" : \"$(uptime | cut -f1 -d,)\","
+
+member_count=$(for i in $(members tilde); do echo $i; done | sort | uniq | wc -l)
+
+echo -e "\t\"users\":  ["
+
+for i in $(for i in $(members tilde); do echo $i; done | sort | uniq); do
+	let count=$count+1
+	echo -e "\t{\n\t\t\"user_name\": \"$i\","
+	set mod_time= "$(stat -c '%Y' /home/$i/public_html/index.* 2> /dev/null | head -n1)"
+	if [ ! "$mod_time" == "" ]; then
+		echo -e "\t\t\"mtime\" : \"0\","
+	else
+		echo -e "\t\t\"mtime\" : \"$(stat -c '%Y' /home/$i/public_html/index.* 2> /dev/null | head -n1)\","
+	fi
+	echo -e "\t\t\"title\" : \""$(curl -L $SITE/~$i -so - |grep -iPo '(?<=<title>)(.*)(?=</title>)')"\""
+	if [ $count -eq $(for i in $(members tilde); do echo $i; done | sort | uniq | wc -l) ]; then
+		echo -e "\t}"
+	else
+		echo -e "\t},"
+	fi
+done
+echo -e "\t],"
+echo -e "\t\"generated_by\":\"bash_tdp\""
+echo "}"
+

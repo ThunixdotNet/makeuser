@@ -11,9 +11,6 @@ LIST_NAME="thunix-join@lists.tildeverse.org"
 ADMIN_EMAIL="root@thunix.net"
 EMAIL_TEMPLATE="email.tmpl"
 YAML_FILE="$1.yml"
-GEN_TDP="./gen_tdp"
-TILDE_JSON="var/www/thunix.cf/tilde.json"
-
 # This one for team
 # ZNC_USER="/home/znc/add_znc_user.sh"
 
@@ -52,7 +49,7 @@ case $1 in
     echo "adding new user $1"
     newpw=`pwgen -1B 10`
     pwcrypt=$(perl -e "print crypt('${newpw}', 'sa');")
-    sudo useradd -m -g 1000 -p $pwcrypt -s /bin/bash $1 || exit 1
+#    sudo useradd -m -g 1000 -p $pwcrypt -s /bin/bash $1 || exit 1
 #		This is the welcome for team.
 #    sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/" $EMAIL_TEMPLATE | sudo mail $1 $2 $ADMIN_EMAIL 
 
@@ -72,34 +69,6 @@ case $1 in
 # If root doesn't have a fediverse account, comment this out
 #    sudo toot "welcome new user ~$1!"
 
-#Thunix specific section
-		currdir=`pwd`
-		cd $REPO_LOCATION; git pull; cd $currdir
-		echo "---
-- name: Setting up $1
-  user:
-    name: $1
-    groups: tilde
-    state: present
-    skeleton: /etc/skel
-    shell: /bin/bash
-    system: no
-    createhome: yes
-    home: /home/$1
-- authorized_key:
-    user: $1
-    state: present
-    key: \"$3\"" > $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
-
-		echo "- include: users/$YAML_FILE" >> $REPO_LOCATION/roles/shell/tasks/users.yml
-		place=`pwd`
-		cd $REPO_LOCATION
-		git add $REPO_LOCATION/roles/shell/tasks/users/$1.yml
-		git commit -am "Adding user $1"
-		git push
-		cd $place
-		$GEN_TDP | sudo tee $TILDE_JSON 
-# End Thunix specific section
 		;;
  
 esac
