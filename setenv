@@ -1,0 +1,3 @@
+# Set location to your repo for ansible here
+# It is only needed for thunix
+export REPO_LOCATION="/home/ubergeek/repos/ansible/"

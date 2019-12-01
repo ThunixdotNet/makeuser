@@ -12,7 +12,7 @@ ADMIN_EMAIL="root@thunix.net"
 EMAIL_TEMPLATE="email.tmpl"
 YAML_FILE="$1.yml"
 GEN_TDP="./gen_tdp"
-TILDE_JSON="var/www/thunix.cf/tilde.json"
+TILDE_JSON="/var/www/thunix.cf/tilde.json"
 
 # This one for team
 # ZNC_USER="/home/znc/add_znc_user.sh"
@@ -20,9 +20,7 @@ TILDE_JSON="var/www/thunix.cf/tilde.json"
 # This one for Thunix
 ZNC_USER="/var/lib/znc/create-znc_account.sh"
 
-# Set location to your repo for ansible here
-# It is only needed for thunix
-REPO_LOCATION="/home/ubergeek/repos/ansible/"
+. ./setenv
 
 error_exit() {
   echo -e "${PROGNAME}: ${1:-"Unknown Error"}" >&2
