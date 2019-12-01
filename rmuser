@@ -1,6 +1,11 @@
 #!/bin/bash
+LIST_NAME="thunix-join@lists.tildeverse.org"
+
 echo "This will remove user account $1 from Thunix."
 echo "It is assumed the user account has been un-enforced in Ansible as well."
+
+echo "Unsubscribe from this list..."
+echo "From: $1 Subject: unsubscribe " | sudo -u $1 mail $LIST_NAME 
 
 echo "Killing user processes..."
 sudo pkill -9 -U $1
