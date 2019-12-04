@@ -14,12 +14,6 @@ YAML_FILE="$1.yml"
 GEN_TDP="./gen_tdp"
 TILDE_JSON="/var/www/thunix.cf/tilde.json"
 
-# This one for team
-# ZNC_USER="/home/znc/add_znc_user.sh"
-
-# This one for Thunix
-ZNC_USER="/var/lib/znc/create-znc_account.sh"
-
 . ./setenv
 
 error_exit() {
@@ -58,11 +52,6 @@ case $1 in
 		sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/g" tmpl/email.tmpl | sudo mail -s "Welcome to Thunix!" $2
 		sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/g" tmpl/email.tmpl | sudo mail -s "Welcome to Thunix!" $ADMIN_EMAIL 
     sub_to_list $1
-
-#    This line is for team
-#    sudo -u znc $ZNC_USER $1
-# 	This one is for Thunix
-		sudo $ZNC_USER $1 $pwcrypt
 
 #		We don't need this for thunix, since ansible will do it
 #		echo "$3" | tee /home/$1/.ssh/authorized_keys
