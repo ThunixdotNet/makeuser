@@ -7,10 +7,8 @@
 # Forked from tilde.team's make user script (
 PROGNAME=${0##*/}
 VERSION="0.4"
-EMAIL_TEMPLATE="tmpl/email.tmpl"
 YAML_FILE="$1.yml"
 GEN_TDP="./gen_tdp"
-TILDE_JSON="/var/www/thunix.cf/tilde.json"
 CONFIG=./setenv
 
 . $CONFIG
