@@ -12,7 +12,7 @@
 #
 ###############################################################################
 
-CONFIG=./setenv.sh
+CONFIG=./setenv
 
 if [ ! -f "$CONFIG" ]; then
 	echo "Config file does not exist, or not at the location specified.  Please create the file, or correct the location."

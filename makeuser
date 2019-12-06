@@ -13,8 +13,9 @@ EMAIL_TEMPLATE="tmpl/email.tmpl"
 YAML_FILE="$1.yml"
 GEN_TDP="./gen_tdp"
 TILDE_JSON="/var/www/thunix.cf/tilde.json"
+CONFIG=./setenv
 
-. ./setenv
+. $CONFIG
 
 error_exit() {
   echo -e "${PROGNAME}: ${1:-"Unknown Error"}" >&2
