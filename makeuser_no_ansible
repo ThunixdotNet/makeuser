@@ -8,13 +8,11 @@
 PROGNAME=${0##*/}
 VERSION="0.4"
 LIST_NAME="thunix-join@lists.tildeverse.org"
-ADMIN_EMAIL="root@thunix.net"
 EMAIL_TEMPLATE="tmpl/email.tmpl"
 YAML_FILE="$1.yml"
+CONFIG=./setenv
 
-# Set location to your repo for ansible here
-# It is only needed for thunix
-REPO_LOCATION="/home/ubergeek/repos/ansible/"
+. $CONFIG
 
 error_exit() {
   echo -e "${PROGNAME}: ${1:-"Unknown Error"}" >&2

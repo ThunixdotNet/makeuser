@@ -1,5 +1,6 @@
 #!/bin/bash
-ADMIN_EMAIL="root@thunix.net"
+CONFIG=./setenv
+. $CONFIG
 USER=$1
 
 sudo mysqldump -u root $USER > /tmp/$USER.sql
