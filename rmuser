@@ -1,5 +1,7 @@
 #!/bin/bash
-LIST_NAME="thunix-join@lists.tildeverse.org"
+CONFIG=./setenv
+
+. $CONFIG
 
 echo "This will remove user account $1 from Thunix."
 echo "It is assumed the user account has been un-enforced in Ansible as well."

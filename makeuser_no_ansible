@@ -7,7 +7,6 @@
 # Forked from tilde.team's make user script (
 PROGNAME=${0##*/}
 VERSION="0.4"
-LIST_NAME="thunix-join@lists.tildeverse.org"
 EMAIL_TEMPLATE="tmpl/email.tmpl"
 YAML_FILE="$1.yml"
 CONFIG=./setenv
