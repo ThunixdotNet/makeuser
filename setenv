@@ -10,3 +10,4 @@ export DESCRIPTION="Thunix is a community, centered around access to a public *n
 export LIST_NAME="thunix-join@lists.tildeverse.org"
 export EMAIL_TEMPLATE="tmpl/email.tmpl"
 export TILDE_JSON="/var/www/thunix.cf/tilde.json"
+export YAML_FILE="$1.yml"

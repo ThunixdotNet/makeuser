@@ -7,7 +7,6 @@
 # Forked from tilde.team's make user script (
 PROGNAME=${0##*/}
 VERSION="0.4"
-YAML_FILE="$1.yml"
 CONFIG=./setenv
 
 . $CONFIG
