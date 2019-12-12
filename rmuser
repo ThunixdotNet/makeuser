@@ -19,4 +19,5 @@ sudo rm -rf /home/$1
 echo "Deleting account from system..."
 sudo userdel $1
 
-echo "User $1 removed from system.  Make sure user is unenforced in ansible." | sudo mail -s "User Account $1 removed from Thunix" root@thunix.net
+echo "User $1 removed from system.  Make sure user is unenforced in ansible." | sudo mail -s "User Account $1 removed from Thunix" $ADMIN_EMAIL
+
