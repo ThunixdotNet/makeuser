@@ -11,6 +11,6 @@ GRANT ALL PRIVILEGES ON $USER.* TO '$USER'@'localhost' 	IDENTIFIED BY '$PASSWORD
 FLUSH PRIVILEGES;
 _EOF
 
-sed -e "s/_username_/$USER/g" -e "s/_password_/$PASSWORD/g" tmpl/dbemail.tmpl | sudo mail -s "Your database has been provisioned" $USER@thunix.net
-sed -e "s/_username_/$USER/g" -e "s/_password_/$PASSWORD/g" tmpl/dbemail.tmpl | sudo mail -s "Your database has been provisioned" $ADMIN_EMAIL
+sed -e "s/_username_/$USER/g" -e "s/_password_/$PASSWORD/g" include/dbemail.tmpl | sudo mail -s "Your database has been provisioned" $USER@thunix.net
+sed -e "s/_username_/$USER/g" -e "s/_password_/$PASSWORD/g" include/dbemail.tmpl | sudo mail -s "Your database has been provisioned" $ADMIN_EMAIL
 
