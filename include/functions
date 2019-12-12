@@ -1,0 +1,15 @@
+#!/bin/bash
+#Common functions used for several makeuser scripts
+
+error_exit() {
+  echo -e "${PROGNAME}: ${1:-"Unknown Error"}" >&2
+  exit 1
+}
+
+usage() {
+  echo -e "usage: $PROGNAME [-h|--help] <username> <email> \"<pubkey>\""
+}
+
+sub_to_list() {
+  echo "From: $1 Subject: subscribe" | sudo -u $1 mail $LIST_NAME 
+}

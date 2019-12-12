@@ -12,21 +12,7 @@ CONFIG=./setenv
 
 . $CONFIG
 
-error_exit() {
-  echo -e "${PROGNAME}: ${1:-"Unknown Error"}" >&2
-  exit 1
-}
-
-usage() {
-  echo -e "usage: $PROGNAME [-h|--help] <username> <email> \"<pubkey>\""
-}
-
-sub_to_list() {
-  echo "
-From: $1
-Subject: subscribe
-" | sudo -u $1 mail $LIST_NAME 
-}
+source include/functions
 
 [[ $(id -u) == 0 ]] && error_exit "Do not run this script as root."
 
