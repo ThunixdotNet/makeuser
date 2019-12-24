@@ -23,7 +23,7 @@ case $1 in
   *)
     [[ $# -ne 3 ]] && error_exit "not enough args"
 
-    makeuser_no_ansible #adding new user
+    makeuser_no_ansible $1 $2 #adding new user
 
 		;;
  
