@@ -40,5 +40,5 @@ add_account_recovery()
 	sudo mkdir --mode=700 /home/$1/.thunix
 	sudo echo echo $2 > /home/$1/.thunix/recovery
 	sudo chmod 600 > /home/$1/.thunix/recovery
-	chown -R $1 /home/$1/.thunix
+	sudo chown -R $1 /home/$1/.thunix
 }
