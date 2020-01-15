@@ -24,7 +24,9 @@ case $1 in
   *)
     [[ $# -ne 3 ]] && error_exit "not enough args"
      
-    makeuser_no_ansible $1 $2 #adding new user
+	#adding new user
+	makeuser_no_ansible $1 $2
+	add_account_recovery $1 $2
 
 #Thunix specific section
 		currdir=`pwd`

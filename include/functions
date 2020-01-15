@@ -34,3 +34,10 @@ makeuser_no_ansible()
 	#If root doesn't have a fediverse account, comment this out
 	#sudo toot "welcome new user ~$1!"
 }
+
+add_account_recovery()
+{	
+	sudo mkdir --mode=700 /home/$1/.thunix
+	sudo echo echo $2 > /home/$1/.thunix/recovery
+	sudo chmod 600 > /home/$1/.thunix/recovery
+}
