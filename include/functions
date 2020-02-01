@@ -39,6 +39,6 @@ add_account_recovery()
 {	
 	sudo mkdir -p --mode=700 /home/$1/.thunix
 	echo echo $2 | sudo tee /home/$1/.thunix/recovery
-	sudo chmod 600 > /home/$1/.thunix/recovery
+	sudo chmod 600 /home/$1/.thunix/recovery
 	sudo chown -R $1 /home/$1/.thunix
 }
