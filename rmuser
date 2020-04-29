@@ -3,21 +3,30 @@ CONFIG=./setenv
 
 . $CONFIG
 
-echo "This will remove user account $1 from Thunix."
-echo "It is assumed the user account has been un-enforced in Ansible as well."
+if [ -z $1 ]
+then
+  echo -e "Usage: `basename $0` [ username ]"
+else
+  remove_user $1
+fi
 
-echo "Unsubscribe from this list..."
-echo "From: $1 Subject: unsubscribe " | sudo -u $1 mail $LIST_NAME 
+remove_user()
+{
+  echo "This will remove user account $1 from Thunix."
+  echo "It is assumed the user account has been un-enforced in Ansible as well."
 
-echo "Killing user processes..."
-sudo pkill -9 -U $1
+  echo "Unsubscribe from this list..."
+  echo "From: $1 Subject: unsubscribe " | sudo -u $1 mail $LIST_NAME 
 
-echo "Archiving home dir..."
-sudo tar cfz /root/backups/$1.tgz /home/$1
-sudo rm -rf /home/$1
+  echo "Killing user processes..."
+  sudo pkill -9 -U $1
 
-echo "Deleting account from system..."
-sudo userdel $1
+  echo "Archiving home dir..."
+  sudo tar cfz /root/backups/$1.tgz /home/$1
+  sudo rm -rf /home/$1
 
-echo "User $1 removed from system.  Make sure user is unenforced in ansible." | sudo mail -s "User Account $1 removed from Thunix" $ADMIN_EMAIL
+  echo "Deleting account from system..."
+  sudo userdel $1
 
+  echo "User $1 removed from system.  Make sure user is unenforced in ansible." | sudo mail -s "User Account $1 removed from Thunix" $ADMIN_EMAIL
+}
