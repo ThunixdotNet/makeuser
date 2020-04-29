@@ -5,9 +5,10 @@ CONFIG=./setenv
 
 if [ -z $1 ]
 then
-  echo -e "Usage: `basename $0` [ username ]"
+  echo -e "Usage: `basename $0` [ username | --baned ]"
 else
   remove_user $1
+  [ -n $2 ] && [[ $2 == --banned ]] && echo $1 >> /root/users.banned
 fi
 
 remove_user()
