@@ -21,7 +21,16 @@ remove_user()
   echo "Deleting account from system..."
   sudo userdel $1
 
-  echo "User $1 removed from system.  Make sure user is unenforced in ansible." | sudo mail -s "User Account $1 removed from Thunix" $ADMIN_EMAIL
+  echo "$1 user account is unenforced in ansible..."
+  currdir=`pwd`
+  cd $REPO_LOCATION; git pull
+  sed -i '/$1/d' $REPO_LOCATION/roles/shell/tasks/users.yml
+  rm $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
+  git commit -am "$1 account unenforced in ansible"
+  git push
+  cd $currdir
+
+  echo "User $1 removed from system." | sudo mail -s "User Account $1 removed from Thunix" $ADMIN_EMAIL
 }
 
 if [ -z $1 ]
