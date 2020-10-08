@@ -49,7 +49,7 @@ case $1 in
     key: \"$3\"" > $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
 
 		echo "- include: users/$YAML_FILE" >> $REPO_LOCATION/roles/shell/tasks/users.yml
-		git add $REPO_LOCATION/roles/shell/tasks/users/$1.yml
+		git add $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
 		git commit -am "Adding user $1"
 		git push
 		cd $currdir
