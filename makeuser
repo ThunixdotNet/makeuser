@@ -31,7 +31,7 @@ case $1 in
 
 #Thunix specific section
 		currdir=`pwd`
-		cd $REPO_LOCATION; git pull; cd $currdir
+		cd $REPO_LOCATION; git pull
 		echo "---
 - name: Setting up $1
   user:
@@ -49,12 +49,10 @@ case $1 in
     key: \"$3\"" > $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
 
 		echo "- include: users/$YAML_FILE" >> $REPO_LOCATION/roles/shell/tasks/users.yml
-		place=`pwd`
-		cd $REPO_LOCATION
 		git add $REPO_LOCATION/roles/shell/tasks/users/$1.yml
 		git commit -am "Adding user $1"
 		git push
-		cd $place
+		cd $currdir
 		$GEN_TDP | sudo tee $TILDE_JSON 
 # End Thunix specific section
 		;;
