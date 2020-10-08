@@ -3,14 +3,6 @@ CONFIG=./setenv
 
 . $CONFIG
 
-if [ -z $1 ]
-then
-  echo -e "Usage: `basename $0` [ username | --baned ]"
-else
-  remove_user $1
-  [ -n $2 ] && [[ $2 == --banned ]] && echo $1 >> /root/users.banned
-fi
-
 remove_user()
 {
   echo "This will remove user account $1 from Thunix."
@@ -31,3 +23,12 @@ remove_user()
 
   echo "User $1 removed from system.  Make sure user is unenforced in ansible." | sudo mail -s "User Account $1 removed from Thunix" $ADMIN_EMAIL
 }
+
+if [ -z $1 ]
+then
+  echo -e "Usage: `basename $0` [ username | --baned ]"
+else
+  remove_user $1
+  [ -n $2 ] && [[ $2 == --banned ]] && echo $1 >> /root/users.banned
+fi
+
