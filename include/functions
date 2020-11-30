@@ -24,8 +24,7 @@ makeuser_no_ansible()
 	#sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/" $EMAIL_TEMPLATE | sudo mail $1 $2 $ADMIN_EMAIL 
 
 	#This is the welcome email for thunix
-	sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/g" include/email.tmpl | sudo mail -s "Welcome to Thunix!" $2
-	sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/g" include/email.tmpl | sudo mail -s "Welcome to Thunix!" $ADMIN_EMAIL 
+	sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/g" include/email.tmpl | sudo mail -s "Welcome to Thunix!" $2,$ADMIN_EMAIL 
 	sub_to_list $1
 
 	#We don't need this for thunix, since ansible will do it
