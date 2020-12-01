@@ -35,7 +35,7 @@ remove_user()
 
 if [ -z $1 ]
 then
-  echo -e "Usage: `basename $0` [ username | --baned ]"
+  echo -e "Usage: `basename $0` [ username | --banned ]"
 else
   remove_user $1
   [ -n $2 ] && [[ $2 == --banned ]] && echo $1 >> /root/users.banned
