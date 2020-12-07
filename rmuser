@@ -24,7 +24,7 @@ remove_user()
   echo "$1 user account is unenforced in ansible..."
   currdir=`pwd`
   cd $REPO_LOCATION; git pull
-  sed -i '/$1/d' $REPO_LOCATION/roles/shell/tasks/users.yml
+  sed -i "/$1/d" $REPO_LOCATION/roles/shell/tasks/users.yml
   rm $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
   git commit -am "$1 account unenforced in ansible"
   git push
