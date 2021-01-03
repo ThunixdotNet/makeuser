@@ -24,13 +24,16 @@ case $1 in
     usage; error_exit "unknown option $1" ;;
   *)
     $(sudo grep -qiw $1 $BANNED) && error_exit "$1 is on the ban list!"
+
+	# username passed lowercased
+    	username=$(echo $1 | tr '[:upper:]' '[:lower:]')
      
 	#adding new user
-	makeuser_no_ansible $1 $2
-	add_account_recovery $1 $2
+	makeuser_no_ansible $username $2
+	add_account_recovery $username $2
 
 #Thunix specific section
-	makeuser_ansible $1 $2
+	makeuser_ansible $username $2
 # End Thunix specific section
 		;;
  
