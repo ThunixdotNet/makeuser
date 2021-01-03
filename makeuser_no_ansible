@@ -14,6 +14,7 @@ CONFIG=./setenv
 source include/functions
 
 [[ $(id -u) == 0 ]] && error_exit "Do not run this script as root."
+[[ $# -ne 3 ]] && error_exit "not enough args"
 
 case $1 in
   -h | --help)
@@ -21,7 +22,6 @@ case $1 in
   -* | --*)
     usage; error_exit "unknown option $1" ;;
   *)
-    [[ $# -ne 3 ]] && error_exit "not enough args"
     $(sudo grep -qiw $1 $BANNED) && error_exit "$1 is on the ban list!"
 
 	#adding new user
