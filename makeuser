@@ -33,7 +33,7 @@ case $1 in
 	add_account_recovery $username $2
 
 #Thunix specific section
-	makeuser_ansible $username $2
+	makeuser_ansible $username $2 "$3"
 # End Thunix specific section
 		;;
  
