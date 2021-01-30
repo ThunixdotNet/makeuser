@@ -38,6 +38,6 @@ then
   echo -e "Usage: `basename $0` username [ --banned ]"
 else
   remove_user $1
-  [ -n $2 ] && [[ $2 == --banned ]] && echo $1 |  sudo tee -a /root/users.banned
+  [ -n $2 ] && [[ $2 == --banned ]] && echo $1 |  sudo tee -a $BANNED
 fi
 
