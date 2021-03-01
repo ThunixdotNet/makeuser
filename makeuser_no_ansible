@@ -25,8 +25,8 @@ case $1 in
     $(sudo grep -qiw $1 $BANNED) && error_exit "$1 is on the ban list!"
 
 	#adding new user
-	makeuser_no_ansible $username $2
-	add_account_recovery $username $2
+	makeuser_no_ansible $1 $2
+	add_account_recovery $1 $2
 
 		;;
  
