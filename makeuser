@@ -25,9 +25,6 @@ case $1 in
     [[ $# -ne 3 ]] && error_exit "not enough args"
     $(sudo grep -qiw $1 $BANNED) && error_exit "$1 is on the ban list!"
 
-	# username passed lowercased
-    	username=$(echo $1 | tr '[:upper:]' '[:lower:]')
-     
 	#adding new user
 	makeuser_no_ansible $username $2
 	add_account_recovery $username $2
