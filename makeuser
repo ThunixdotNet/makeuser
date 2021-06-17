@@ -30,7 +30,7 @@ case $1 in
 	add_account_recovery $1 $2
 
 #Thunix specific section
-	makeuser_ansible $1 $2 "$3"
+source include/ansible.sh
 # End Thunix specific section
 		;;
  
