@@ -14,9 +14,7 @@ remove_user()
   echo "Killing user processes..."
   sudo pkill -9 -U $1
 
-  echo "Archiving home dir..."
-  sudo tar cfz /root/backups/$1.tgz /home/$1
-  sudo rm -rf /home/$1
+  [ -n $2 ] && [[ $2 == --backup ]] && bacup_user_data $1
 
   echo "Deleting account from system..."
   sudo userdel $1
@@ -33,9 +31,16 @@ remove_user()
   echo "User $1 removed from system." | sudo mail -s "User Account $1 removed from Thunix" $ADMIN_EMAIL
 }
 
+bacup_user_data()
+{
+  echo "Archiving home dir..."
+  sudo tar cfz /root/backups/$1.tgz /home/$1
+  sudo rm -rf /home/$1
+}
+
 if [ -z $1 ]
 then
-  echo -e "Usage: `basename $0` username [ --banned ]"
+  echo -e "Usage: `basename $0` username [ --banned ][ --backup ]"
 else
   remove_user $1
   [ -n $2 ] && [[ $2 == --banned ]] && echo $1 |  sudo tee -a $BANNED
