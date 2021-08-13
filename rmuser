@@ -18,6 +18,7 @@ remove_user()
 
   echo "Deleting account from system..."
   sudo userdel $1
+  sudo rm -rf /home/$1
 
   echo "$1 user account is unenforced in ansible..."
   currdir=`pwd`
@@ -35,7 +36,6 @@ bacup_user_data()
 {
   echo "Archiving home dir..."
   sudo tar cfz /root/backups/$1.tgz /home/$1
-  sudo rm -rf /home/$1
 }
 
 if [ -z $1 ]
