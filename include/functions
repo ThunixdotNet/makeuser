@@ -7,7 +7,7 @@ error_exit() {
 }
 
 usage() {
-  echo -e "usage: $PROGNAME [-h|--help] <username> <email> \"<pubkey>\""
+  echo -e "usage: $PROGNAME [-h|--help] <username> <email> <pubkey>"
 }
 
 sub_to_list() {
