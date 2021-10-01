@@ -3,46 +3,24 @@ CONFIG=./setenv
 
 . $CONFIG
 
-remove_user()
-{
-  echo "This will remove user account $1 from Thunix."
-  echo "It is assumed the user account has been un-enforced in Ansible as well."
-
-  echo "Unsubscribe from this list..."
-  echo "From: $1 Subject: unsubscribe " | sudo -u $1 mail $LIST_NAME 
-
-  echo "Killing user processes..."
-  sudo pkill -9 -U $1
-
-  [ -n $2 ] && [[ $2 == --backup ]] && bacup_user_data $1
-
-  echo "Deleting account from system..."
-  sudo userdel $1
-  sudo rm -rf /home/$1
-
-  echo "$1 user account is unenforced in ansible..."
-  currdir=`pwd`
-  cd $REPO_LOCATION; git pull
-  sed -i "/$1/d" $REPO_LOCATION/roles/shell/tasks/users.yml
-  rm $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
-  git commit -am "$1 account unenforced in ansible"
-  git push
-  cd $currdir
-
-  echo "User $1 removed from system." | sudo mail -s "User Account $1 removed from Thunix" $ADMIN_EMAIL
-}
-
-bacup_user_data()
-{
-  echo "Archiving home dir..."
-  sudo tar cfz /root/backups/$1.tgz /home/$1
-}
+source include/functions
 
 if [ -z $1 ]
 then
   echo -e "Usage: `basename $0` username [ --banned ][ --backup ]"
 else
+  echo "This will remove user account $1 from Thunix."
+  echo "It is assumed the user account has been un-enforced in Ansible as well."
+
+  echo "Killing user processes..."
+  sudo pkill -9 -U $1
+  
+  if [ -n $2 ]
+  then
+    [[ $2 == --backup ]] && backup_user_data $1
+    [[ $2 == --banned ]] && echo $1 |  sudo tee -a $BANNED
+  fi
+
   remove_user $1
-  [ -n $2 ] && [[ $2 == --banned ]] && echo $1 |  sudo tee -a $BANNED
 fi
 

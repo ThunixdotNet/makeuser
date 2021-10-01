@@ -41,3 +41,30 @@ add_account_recovery()
 	sudo chmod 600 /home/$1/.thunix/recovery
 	sudo chown -R $1 /home/$1/.thunix
 }
+
+remove_user()
+{
+  echo "Unsubscribe from this list..."
+  echo "From: $1 Subject: unsubscribe " | sudo -u $1 mail $LIST_NAME 
+
+  echo "Deleting account from system..."
+  sudo userdel $1
+  sudo rm -rf /home/$1
+
+  echo "$1 user account is unenforced in ansible..."
+  currdir=`pwd`
+  cd $REPO_LOCATION; git pull
+  sed -i "/$1/d" $REPO_LOCATION/roles/shell/tasks/users.yml
+  rm $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
+  git commit -am "$1 account unenforced in ansible"
+  git push
+  cd $currdir
+
+  echo "User $1 removed from system." | sudo mail -s "User Account $1 removed from Thunix" $ADMIN_EMAIL
+}
+
+backup_user_data()
+{
+  echo "Archiving home dir..."
+  sudo tar cfz /root/backups/$1.tgz /home/$1
+}
