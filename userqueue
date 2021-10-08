@@ -13,7 +13,7 @@ then
   echo "(a) Accept sign up request"
   echo "(d) Delete selected user from queue"
 else
-  if [ $1 = "q" ]
+  if [ $1 = "u" ]
   then
     awk -F, '{print $1}' $USERQUEUE
   else
