@@ -12,8 +12,8 @@ _EOF
 
 dump_database()
 {
-  sudo mysqldump -u root $DATABASE > /tmp/$DATABASE.sql
-  sudo mv /tmp/$DATABASE.sql /root/backups/$DATABASE.sql
+  sudo mysqldump -u root $DATABASE | gzip > /tmp/$DATABASE.sql.gz
+  sudo mv /tmp/$DATABASE.sql.gz $BACKUP_USER_DATA/
 }
 
 drop_database()
