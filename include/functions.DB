@@ -1,0 +1,11 @@
+#!/bin/bash
+#Common functions used for Databases management scripts
+
+create_database()
+{
+sudo mysql -u root << _EOF
+CREATE DATABASE $DATABASE;
+GRANT ALL PRIVILEGES ON $DATABASE.* TO '$USER'@'localhost' IDENTIFIED BY '$PASSWORD';
+FLUSH PRIVILEGES;
+_EOF
+}
