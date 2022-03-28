@@ -4,7 +4,7 @@ CONFIG=./setenv
 USER=$1
 
 sudo mysqldump -u root $USER > /tmp/$USER.sql
-sudo mv /tmp/$USER.sql /root/backups/$USER.sql
+sudo mv /tmp/$USER.sql $BACKUP_USER_DATA/$USER.sql
 
 sudo mysql -u root << _EOF
 DROP DATABASE $USER;

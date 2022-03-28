@@ -66,5 +66,5 @@ remove_user()
 backup_user_data()
 {
   echo "Archiving home dir..."
-  sudo tar cfz /root/backups/$1.tgz /home/$1
+  sudo tar cfz $BACKUP_USER_DATA/$1.tgz /home/$1
 }
