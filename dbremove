@@ -7,8 +7,12 @@ CONFIG=./setenv
 USER=$1
 DATABASE=$1
 
-dump_database
-drop_database
-
-echo "The databases for $USER has been archived, and removed." | sudo mail -s "Database for $USER has been removed" $ADMIN_EMAIL
-
+if [ -z "$1" ]
+then
+  echo -e "delete database/s for given username."
+  echo -e "usage: $(basename $0) <username>"
+else
+  dump_database
+  drop_database
+  echo "The databases for $USER has been archived, and removed." | sudo mail -s "Database for $USER has been removed" $ADMIN_EMAIL
+fi
