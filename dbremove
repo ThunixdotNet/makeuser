@@ -1,15 +1,14 @@
 #!/bin/bash
+
 CONFIG=./setenv
 . $CONFIG
+. include/functions.DB
+
 USER=$1
+DATABASE=$1
 
-sudo mysqldump -u root $USER > /tmp/$USER.sql
-sudo mv /tmp/$USER.sql $BACKUP_USER_DATA/$USER.sql
-
-sudo mysql -u root << _EOF
-DROP DATABASE $USER;
-FLUSH PRIVILEGES;
-_EOF
+dump_database
+drop_database
 
 echo "The databases for $USER has been archived, and removed." | sudo mail -s "Database for $USER has been removed" $ADMIN_EMAIL
 
