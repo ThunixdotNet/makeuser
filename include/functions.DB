@@ -10,7 +10,7 @@ FLUSH PRIVILEGES;
 _EOF
 }
 
-dump_database()
+backup_database()
 {
   sudo mysqldump -u root $DATABASE | gzip > /tmp/$DATABASE.sql.gz
   sudo mv /tmp/$DATABASE.sql.gz $BACKUP_USER_DATA/
