@@ -2,7 +2,7 @@
 
 CONFIG=./setenv
 . $CONFIG
-. include/functions.DB
+. include/functions
 
 USER=$1
 DATABASE=$1
@@ -12,7 +12,7 @@ then
   echo -e "delete database/s for given username."
   echo -e "usage: $(basename $0) <username>"
 else
-  backup_database
-  drop_database
+  database_backup
+  database_remove
   echo "The databases for $USER has been archived, and removed." | sudo mail -s "Database for $USER has been removed" $ADMIN_EMAIL
 fi

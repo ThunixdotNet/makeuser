@@ -2,7 +2,7 @@
 
 CONFIG=./setenv
 . $CONFIG
-. include/functions.DB
+. include/functions
 
 USER=$1
 DATABASE=$1
@@ -13,7 +13,7 @@ then
   echo -e "adding a new database for given username."
   echo -e "usage: $(basename $0) <username>"
 else
-  create_database
+  database_create
   sed -e "s/_username_/$USER/g" -e "s/_password_/$PASSWORD/g" include/dbemail.tmpl | sudo mail -s "Your database has been provisioned" $USER@thunix.net
   sed -e "s/_username_/$USER/g" -e "s/_password_/$PASSWORD/g" include/dbemail.tmpl | sudo mail -s "Your database has been provisioned" $ADMIN_EMAIL
 fi

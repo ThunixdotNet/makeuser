@@ -68,3 +68,28 @@ backup_user_data()
   echo "Archiving home dir..."
   sudo tar cfz $BACKUP_USER_DATA/$1.tgz /home/$1
 }
+
+#Common functions used for Databases management scripts
+
+database_create()
+{
+sudo mysql -u root << _EOF
+CREATE DATABASE $DATABASE;
+GRANT ALL PRIVILEGES ON $DATABASE.* TO '$USER'@'localhost' IDENTIFIED BY '$PASSWORD';
+FLUSH PRIVILEGES;
+_EOF
+}
+
+database_backup()
+{
+  sudo mysqldump -u root $DATABASE | gzip > /tmp/$DATABASE.sql.gz
+  sudo mv /tmp/$DATABASE.sql.gz $BACKUP_USER_DATA/
+}
+
+database_remove()
+{
+sudo mysql -u root << _EOF
+DROP DATABASE $DATABASE;
+FLUSH PRIVILEGES;
+_EOF
+}
