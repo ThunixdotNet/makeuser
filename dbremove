@@ -5,14 +5,17 @@ CONFIG=./setenv
 . include/functions
 
 USER=$1
-DATABASE=$1
 
 if [ -z "$1" ]
 then
   echo -e "delete database/s for given username."
   echo -e "usage: $(basename $0) <username>"
 else
-  database_backup
-  database_remove
+  for DATABASE in $(mysql -u root -sN -e "SELECT Db FROM mysql.db WHERE User='$USER';")
+  do
+    database_backup
+    database_remove
+  done
+
   echo "The databases for $USER has been archived, and removed." | sudo mail -s "Database for $USER has been removed" $ADMIN_EMAIL
 fi
