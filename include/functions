@@ -90,6 +90,7 @@ database_remove()
 {
 sudo mysql -u root << _EOF
 DROP DATABASE $DATABASE;
+REVOKE ALL PRIVILEGES ON $DATABASE.* FROM '$USER'@'localhost';
 FLUSH PRIVILEGES;
 _EOF
 }
