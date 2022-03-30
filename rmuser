@@ -17,8 +17,8 @@ else
   
   if [ -n $2 ]
   then
-    [[ $2 == --backup ]] && backup_user_data $1
-    [[ $2 == --banned ]] && echo $1 |  sudo tee -a $BANNED
+    [ "$2" = "--backup" ] && backup_user_data $1
+    [ "$2" = "--banned" ] && echo $1 |  sudo tee -a $BANNED
   fi
 
   remove_user $1
