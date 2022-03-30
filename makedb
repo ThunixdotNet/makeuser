@@ -5,13 +5,19 @@ CONFIG=./setenv
 . include/functions
 
 USER=$1
-DATABASE=$1
 PASSWORD=`pwgen -1B 24`
+
+if [ $# -eq 2 ]
+then
+  DATABASE=$2
+else
+  DATABASE=$1
+fi
 
 if [ -z "$1" ]
 then
   echo -e "adding a new database for given username."
-  echo -e "usage: $(basename $0) <username>"
+  echo -e "usage: $(basename $0) <user name> [database name]"
 else
   database_create
   sed -e "s/_username_/$USER/g" -e "s/_password_/$PASSWORD/g" include/dbemail.tmpl | sudo mail -s "Your database has been provisioned" $USER@thunix.net
