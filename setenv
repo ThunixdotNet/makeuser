@@ -1,6 +1,5 @@
 # Set location to your repo for ansible here
 # It is only needed for thunix
-export REPO_LOCATION="/home/deepend/repos/ansible/"
 export SITE_TITLE="Thunix"
 export SITE="https://thunix.net"
 export WANT_USERS="true"
