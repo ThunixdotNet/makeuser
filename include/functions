@@ -20,15 +20,13 @@ makeuser_no_ansible()
 	newpw=`pwgen -1B 10`
 	pwcrypt=$(perl -e "print crypt('${newpw}', 'sa');")
 	sudo useradd -m -g 1001 -p $pwcrypt -s /bin/bash $1 || exit 1
-	#This is the welcome for team.
-	#sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/" $EMAIL_TEMPLATE | sudo mail $1 $2 $ADMIN_EMAIL
 
 	#This is the welcome email for thunix
 	sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/g" include/email.tmpl | sudo mail -s "Welcome to Thunix!" $2,$ADMIN_EMAIL
 	sub_to_list $1
 
 	#We don't need this for thunix, since ansible will do it
-	#echo "$3" | tee /home/$1/.ssh/authorized_keys
+	echo "$3" | tee /home/$1/.ssh/authorized_keys
 
 	#If root doesn't have a fediverse account, comment this out
 	#sudo toot "welcome new user ~$1!"
