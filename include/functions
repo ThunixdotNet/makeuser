@@ -14,31 +14,6 @@ sub_to_list() {
   echo "From: $1 Subject: subscribe" | sudo -u $1 mail $LIST_NAME
 }
 
-makeuser_no_ansible()
-{
-	echo "adding new user $1"
-	newpw=`pwgen -1B 10`
-	pwcrypt=$(perl -e "print crypt('${newpw}', 'sa');")
-	sudo useradd -m -g 1001 -p $pwcrypt -s /bin/bash $1 || exit 1
-
-	#This is the welcome email for thunix
-	sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/g" include/email.tmpl | sudo mail -s "Welcome to Thunix!" $2,$ADMIN_EMAIL
-	sub_to_list $1
-
-	echo "$3" | sudo tee /home/$1/.ssh/authorized_keys
-
-	#If root doesn't have a fediverse account, comment this out
-	#sudo toot "welcome new user ~$1!"
-}
-
-add_account_recovery()
-{
-	sudo mkdir -p --mode=700 /home/$1/.thunix
-	echo $2 | sudo tee /home/$1/.thunix/recovery
-	sudo chmod 600 /home/$1/.thunix/recovery
-	sudo chown -R $1 /home/$1/.thunix
-}
-
 remove_user()
 {
   echo "Unsubscribe from this list..."
@@ -47,15 +22,6 @@ remove_user()
   echo "Deleting account from system..."
   sudo userdel $1
   sudo rm -rf /home/$1
-
-  echo "$1 user account is unenforced in ansible..."
-  currdir=`pwd`
-  cd $REPO_LOCATION; git pull
-  sed -i "/$1/d" $REPO_LOCATION/roles/shell/tasks/users.yml
-  rm $REPO_LOCATION/roles/shell/tasks/users/$YAML_FILE
-  git commit -am "$1 account unenforced in ansible"
-  git push
-  cd $currdir
 
   echo "User $1 removed from system." | sudo mail -s "User Account $1 removed from Thunix" $ADMIN_EMAIL
 }

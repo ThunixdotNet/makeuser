@@ -10,7 +10,6 @@ then
   echo -e "Usage: `basename $0` username [ --banned ][ --backup ]"
 else
   echo "This will remove user account $1 from Thunix."
-  echo "It is assumed the user account has been un-enforced in Ansible as well."
 
   echo "Killing user processes..."
   sudo pkill -9 -U $1

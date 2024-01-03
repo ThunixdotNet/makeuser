@@ -1,19 +1,28 @@
 #!/bin/bash
 # ---------------------------------------------------------------------------
-# makeuser - tilde new user creation
+# makeuser - thunix.net new user creation
 # Usage: makeuser [-h|--help] <username> <email> "<pubkey>"
 # ---------------------------------------------------------------------------
-#
-# Forked from tilde.team's make user script (
+
 PROGNAME=${0##*/}
-VERSION="0.4"
+VERSION="0.1"
 CONFIG=./setenv
 
-. $CONFIG
+error_exit() {
+  echo -e "${PROGNAME}: ${1:-"Unknown Error"}" >&2
+  exit 1
+}
 
-source include/functions
+usage() {
+  echo -e "usage: $PROGNAME [-h|--help] <username> <email> \"<pubkey>\""
+}
 
-[[ $(id -u) == 0 ]] && error_exit "Do not run this script as root."
+sub_to_list() {
+  echo "
+From: $1
+Subject: subscribe
+" | sudo -u $1 sendmail thunix-join@lists.tildeverse.org
+}
 
 case $1 in
   -h | --help)
@@ -22,13 +31,43 @@ case $1 in
     usage; error_exit "unknown option $1" ;;
   *)
     [[ $# -ne 3 ]] && error_exit "not enough args"
+
     $(sudo grep -qiw $1 $BANNED) && error_exit "$1 is on the ban list!"
 
-	#adding new user
-	makeuser_no_ansible $1 $2
-	add_account_recovery $1 $2
+    if id $1 > /dev/null 2>&1; then
+	exit 0
+    fi
 
-		;;
- 
+    echo "adding new user $1"
+    newpw=$(pwgen -1B 10)
+    sudo useradd -m -g 100 -s /usr/bin/bash $1 \
+        || error_exit "couldn't add user"
+    echo "$1:$newpw" | sudo chpasswd
+
+    echo "sending welcome mail"
+    sed -e "s/newusername/$1/g" -e "s/newpassword/$newpw/" ./include/email.tmpl \
+        | /usr/sbin/sendmail $1 $2 root
+
+    echo "subscribing to mailing list"
+    sub_to_list $1
+
+    echo "removing .git and README.md from new homedir"
+    sudo rm -rf /home/$1/.git
+    sudo rm -rf /home/$1/README.md
+
+    echo "adding ssh pubkey"
+    echo "$3" | sudo tee /home/$1/.ssh/authorized_keys
+
+    echo "adding account recovery"
+    sudo mkdir -p --mode=700 /home/$1/.thunix
+    echo $2 | sudo tee /home/$1/.thunix/recovery
+    sudo chmod 600 /home/$1/.thunix/recovery
+    sudo chown -R $1 /home/$1/.thunix
+
+    echo "making znc user"
+#    znccreate.py "$1" "$newpw"
+
+    echo "announcing new user on mastodon"
+#    toot "welcome new user ~$1!"
+
 esac
-
