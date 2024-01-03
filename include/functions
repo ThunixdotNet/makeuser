@@ -26,7 +26,7 @@ makeuser_no_ansible()
 	sub_to_list $1
 
 	#We don't need this for thunix, since ansible will do it
-	echo "$3" | tee /home/$1/.ssh/authorized_keys
+	echo "$3" | sudo tee /home/$1/.ssh/authorized_keys
 
 	#If root doesn't have a fediverse account, comment this out
 	#sudo toot "welcome new user ~$1!"
